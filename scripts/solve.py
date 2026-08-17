@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import time
 
@@ -81,8 +82,10 @@ def main():
               "start": a.start, "arcs": res["arcs"]}
     json.dump(record, open(f"{a.outdir}/network{a.n:02d}_seed{a.seed}.json", "w"), indent=1)
 
-    if res["energy"] >= BKV[a.n] - 1e-6:
-        print(f"no improvement (best {res['energy']:.1f} >= {BKV[a.n]}); "
+    # the routing must be integral, so ceil(LP) is what a topology can actually achieve
+    achievable = math.ceil(res["energy"] - 1e-6)
+    if achievable >= BKV[a.n]:
+        print(f"no improvement (best achievable {achievable} >= {BKV[a.n]}); "
               f"nothing written for submission")
         return
 
