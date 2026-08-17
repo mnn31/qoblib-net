@@ -1,6 +1,21 @@
 # qoblib-net
 
-Stochastic search for **QOBLIB problem 08, Network Design**, the
+Solvers for two [QOBLIB](https://zib-aopt.github.io/QOBLIB/) problem classes.
+
+**Results so far**
+
+| what | outcome |
+| :--- | :--- |
+| Problem 08, Network Design | 5 new best-known values (`network14`-`network18`), see [results/RESULTS.md](results/RESULTS.md) |
+| Problem 06, Portfolio | 96 open instances closed to proven optimality, see [results/PORTFOLIO.md](results/PORTFOLIO.md) |
+
+Everything is verified with QOBLIB's own checkers before it is written down.
+
+---
+
+## Problem 08, Network Design
+
+Stochastic search for the
 Bienstock–Günlük min-congestion network design problem from the
 [Quantum Optimization Benchmarking Library](https://zib-aopt.github.io/QOBLIB/).
 
