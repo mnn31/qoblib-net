@@ -55,7 +55,19 @@ def write_csv(path: str, row: dict) -> None:
 def build_portfolio(out: str, results: str) -> int:
     from qoblib_portfolio.model import Coefficients, Instance
 
-    records = json.load(open(f"{results}/summary.json"))
+    # `results` may be a single results directory or a parent holding several
+    # (the a010 families are solved by a few workers in parallel, one dir each)
+    dirs = []
+    if os.path.exists(f"{results}/summary.json"):
+        dirs.append(results)
+    for sub in sorted(os.listdir(results)):
+        if os.path.exists(f"{results}/{sub}/summary.json"):
+            dirs.append(f"{results}/{sub}")
+    records = []
+    for d in dirs:
+        for rec in json.load(open(f"{d}/summary.json")):
+            rec["_dir"] = d
+            records.append(rec)
     root = f"{out}/{DATE_TAG}_ChainDP_Gupta"
     os.makedirs(root, exist_ok=True)
     open(f"{root}/README.md", "w").write(PORTFOLIO_README)
@@ -83,7 +95,7 @@ def build_portfolio(out: str, results: str) -> int:
 
         d = f"{root}/{iid}"
         os.makedirs(d, exist_ok=True)
-        shutil.copy(f"{results}/{rec['solution']}", f"{d}/{iid}_solution.sol")
+        shutil.copy(f"{rec['_dir']}/{rec['solution']}", f"{d}/{iid}_solution.sol")
         write_csv(f"{d}/{iid}_summary.csv", {
             "Problem": iid,
             "Submitter": SUBMITTER, "Affiliation": AFFILIATION,

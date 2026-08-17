@@ -1,4 +1,4 @@
-# Problem 06, Portfolio Optimization: 96 open instances closed
+# Problem 06, Portfolio Optimization: 160 instances solved exactly
 
 Every instance of the `a003`, `a004` and `a005` families was listed as **open**
 on the QOBLIB leaderboard, meaning no feasible solution was on record at all.
@@ -6,7 +6,26 @@ All 96 of them (12 instance bases times the 8-value lambda grid) are now solved
 to **proven optimality**, and all 96 pass the official checker
 (`06-portfolio/check`, exit code 0).
 
-Solutions are in `results/portfolio/`, in the checker's canonical format.
+The same dynamic program was then run on the `a010_t10` and `a010_t15`
+families, 64 more instances. Every value matches the published one exactly, so
+nothing improves there, but they are now **proven optimal** rather than
+best-known. 50 of those 64 were listed as best-known only.
+
+| family | instances | published status before | after |
+| :--- | ---: | :--- | :--- |
+| a003, a004, a005 | 96 | open, no solution on record | proven optimal |
+| a010_t10 | 32 | 8 optimal, 24 best-known | 32 proven optimal |
+| a010_t15 | 32 | 6 optimal, 26 best-known | 32 proven optimal |
+
+All 160 pass the official checker. Solutions are in `results/portfolio/` and
+`results/portfolio_a010/`, in the checker's canonical format.
+
+That the DP agrees with all 64 published `a010` values is worth stating plainly:
+it is the strongest available evidence that the implementation is right, since
+those values come from independent solver runs on the shipped LP and QUBO
+models.
+
+Submitted upstream as https://github.com/ZIB-AOPT/QOBLIB/pull/44.
 
 ## Why they were open, and why they are easy
 
@@ -39,7 +58,9 @@ This structure is invisible to a MIP or QUBO solver working on the flat binary
 model, which is the interesting part: instances that a general solver has to
 branch on are closed exactly by exploiting the chain.
 
-Total compute for all 96 instances: **6 seconds**.
+Total compute: **6 seconds** for the 96 small instances. The `a010`
+families have 10,606 feasible portfolios per period, so those take a few
+minutes each and were run across three workers.
 
 ## Validation
 
