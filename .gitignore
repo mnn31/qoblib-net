@@ -1,5 +1,4 @@
 __pycache__/
 *.pyc
-results/*.json
-results/*.sol
+results/sweep/
 .venv/
