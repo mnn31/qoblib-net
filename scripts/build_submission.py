@@ -142,12 +142,12 @@ def build_network(out: str, results: str, sweep: str | None) -> int:
     os.makedirs(root, exist_ok=True)
     open(f"{root}/README.md", "w").write(NETWORK_README)
 
-    runs: dict[int, list[dict]] = {}
-    if sweep and os.path.isdir(sweep):
-        for f in sorted(os.listdir(sweep)):
-            if f.endswith(".json") and f.startswith("network"):
-                r = json.load(open(f"{sweep}/{f}"))
-                runs.setdefault(r["n"], []).append(r)
+    # run statistics aggregated across every independent run of every wave,
+    # written by the aggregation step (see results/RESULTS.md)
+    stats = {}
+    stats_file = os.path.join(os.path.dirname(results), "run_stats.json")
+    if os.path.exists(stats_file):
+        stats = {int(k): v for k, v in json.load(open(stats_file)).items()}
 
     made = 0
     for fname in sorted(os.listdir(results)):
@@ -158,13 +158,10 @@ def build_network(out: str, results: str, sweep: str | None) -> int:
         demand = parse_demand(f"{QOBLIB}/08-network/instances/demand.txt", n)
         obj = int(open(f"{results}/{fname}").readlines()[1].split("=")[1])
 
-        rs = runs.get(n, [])
-        n_runs = len(rs) if rs else 1
-        import math
-        best = min((math.ceil(r["best_lp"] - 1e-6) for r in rs), default=obj)
-        # a run counts as successful if it reached the best value this method found
-        n_succ = sum(1 for r in rs if math.ceil(r["best_lp"] - 1e-6) <= best) if rs else 1
-        secs = (sum(r["seconds"] for r in rs) / len(rs)) if rs else 1500.0
+        st = stats.get(n, {})
+        n_runs = st.get("nruns", 1)
+        n_succ = st.get("nsucc", 1)
+        secs = st.get("avg_secs", 1500.0)
 
         n_arcs = n * (n - 1)
         n_x, n_f = n_arcs, n * n_arcs - n_arcs   # f[k,i,j] exists only for j != k

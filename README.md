@@ -6,8 +6,8 @@ Solvers for two [QOBLIB](https://zib-aopt.github.io/QOBLIB/) problem classes.
 
 | what | outcome |
 | :--- | :--- |
-| Problem 08, Network Design | 5 new best-known values (`network14`-`network18`), see [results/RESULTS.md](results/RESULTS.md) |
-| Problem 06, Portfolio | 96 open instances closed to proven optimality, see [results/PORTFOLIO.md](results/PORTFOLIO.md) |
+| Problem 08, Network Design | 10 new best-known values (`network14`-`network23`), up to 5.6%, see [results/RESULTS.md](results/RESULTS.md) |
+| Problem 06, Portfolio | 160 instances solved exactly, 96 of them previously open, see [results/PORTFOLIO.md](results/PORTFOLIO.md) |
 
 Everything is verified with QOBLIB's own checkers before it is written down.
 

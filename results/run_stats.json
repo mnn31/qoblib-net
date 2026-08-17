@@ -1,0 +1,72 @@
+{
+ "14": {
+  "best": 342455,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1250.0203446944554,
+  "objective": 342455
+ },
+ "15": {
+  "best": 372500,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1250.0310576359432,
+  "objective": 372500
+ },
+ "16": {
+  "best": 401000,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1250.0257913271587,
+  "objective": 401000
+ },
+ "17": {
+  "best": 434429,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1250.0265712738037,
+  "objective": 434429
+ },
+ "18": {
+  "best": 475656,
+  "nruns": 6,
+  "nsucc": 2,
+  "avg_secs": 1250.021778901418,
+  "objective": 475656
+ },
+ "19": {
+  "best": 497000,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1400.0568102995555,
+  "objective": 497000
+ },
+ "20": {
+  "best": 526653,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1400.069197456042,
+  "objective": 526653
+ },
+ "21": {
+  "best": 569554,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1400.0511136054993,
+  "objective": 569554
+ },
+ "22": {
+  "best": 621810,
+  "nruns": 5,
+  "nsucc": 1,
+  "avg_secs": 1200.0244789600372,
+  "objective": 621810
+ },
+ "23": {
+  "best": 660000,
+  "nruns": 6,
+  "nsucc": 1,
+  "avg_secs": 1400.0599230527878,
+  "objective": 660000
+ }
+}
