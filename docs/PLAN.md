@@ -1,9 +1,9 @@
 # Plan
 
-Three tracks, ordered by how certain the payoff is. They are independent — a
+Three tracks, ordered by how certain the payoff is. They are independent, so a
 failure on one costs nothing on the others.
 
-## Track A — verification harness (done)
+## Track A: verification harness (done)
 
 `scripts/check_reference.py` reproduces the published objective for all 20
 network-design instances and confirms the LP oracle agrees with every one of
@@ -12,7 +12,7 @@ with it, any claimed improvement can be self-checked before it goes anywhere.
 
 Status: passing on all 20.
 
-## Track B — the network-design search (the research contribution)
+## Track B: the network-design search (the research contribution)
 
 Target: `network11` … `network23`. Deliberately **not** `network24`.
 
@@ -25,7 +25,7 @@ in 2014. That record is defended by the people who write the solvers.
 `network11`–`network23` are QOBLIB-specific truncations of the same matrix. They
 are *not* in MIPLIB and have nothing like that history. Their published values
 come from the same curated reference set, but nobody has run a dedicated
-metaheuristic at them — the only community submission on record is a 2-hour
+metaheuristic at them. The only community submission on record is a 2-hour
 Gurobi baseline that loses to the reference on every single one, by up to 15%.
 
 Steps:
@@ -44,25 +44,25 @@ Steps:
 Calibration: 2 minutes of naive single-chain SA on `network11` lands 7.5% above
 the record. So this is a real search problem, not a formality.
 
-## Track C — open instances (the high-certainty play)
+## Track C: open instances (the high-certainty play)
 
 333 of QOBLIB's 1,264 instances have **no feasible solution on record at all**.
-On those, the first valid submission takes the record outright — no incumbent to
+On those, the first valid submission takes the record outright, with no incumbent to
 beat. Ranked by effort:
 
 - **`06-portfolio`, `a003`/`a004`/`a005` (12 bases × 8 λ values).** A few dozen
   binary variables each. No LP or QUBO model files are shipped for them, which
-  is almost certainly why they were never solved — the model has to be generated
+  is almost certainly why they were never solved. The model has to be generated
   first, from `models/binary_quadratic_programming/bqp_u3_c10.zpl`. Once
   generated these are small enough to solve to proven optimality outright.
 - **`06-portfolio`, `a200`/`a400` (16 bases × 8 λ).** Same missing-model
   situation, but 18,000 binaries at `a200_t15`. Feasible solutions are easy to
   construct (the constraints are two equalities per period); good ones are not.
   This is where a p-bit / annealing approach has room.
-- **`05-sports` (102 open)** — read the warning first: those instances were
+- **`05-sports` (102 open)**: read the warning first: those instances were
   selected *because* existing solvers could not find any feasible solution in
   reasonable time. High risk, high reward.
-- **`04-steiner` (147 open)** — the largest open surface, but instances run to
+- **`04-steiner` (147 open)**: the largest open surface, but instances run to
   millions of variables. A sequential rip-up-and-reroute heuristic is the
   standard attack.
 
@@ -76,7 +76,7 @@ Read `CONTRIBUTING.md` in the benchmark repo before the first PR. The parts that
 bite:
 
 - Every PR needs approval from **two committee members**, so expect a wait.
-- `Optimality Bound` must stay `N/A` for heuristic runs — setting it equal to
+- `Optimality Bound` must stay `N/A` for heuristic runs. Setting it equal to
   the objective asserts a proven optimum and triggers a hard check.
 - At least 5 independent runs for a stochastic method, 10+ recommended, seeds
   documented.

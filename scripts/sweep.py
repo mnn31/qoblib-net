@@ -2,7 +2,7 @@
 """Run parallel tempering across many instances and seeds, one process each.
 
 QOBLIB requires at least 5 independent runs for a stochastic method (10+
-recommended) with seeds documented, so a sweep — not a single run — is the unit
+recommended) with seeds documented, so a sweep, not a single run, is the unit
 of work that can actually be submitted.
 
     python scripts/sweep.py --instances 11-23 --seeds 5 --seconds 1800 --workers 10

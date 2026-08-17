@@ -1,6 +1,6 @@
 # qoblib-net
 
-Stochastic search for **QOBLIB problem 08, Network Design** — the
+Stochastic search for **QOBLIB problem 08, Network Design**, the
 Bienstock–Günlük min-congestion network design problem from the
 [Quantum Optimization Benchmarking Library](https://zib-aopt.github.io/QOBLIB/).
 
@@ -14,15 +14,15 @@ optimality; the other fourteen have stood as best-known upper bounds, and the
 
 The problem splits cleanly in two:
 
-- **Outer** — which digraph? Combinatorial, enormous, no useful lower bound.
-- **Inner** — given the digraph, how to route? A min-congestion multicommodity
+- **Outer**: which digraph? Combinatorial, enormous, no useful lower bound.
+- **Inner**: given the digraph, how to route? A min-congestion multicommodity
   flow, which is a linear program and therefore exactly solvable in milliseconds.
 
 So the search only ever moves over topologies, scoring each one with an exact
 LP oracle. Two properties measured here make that work:
 
 1. On all 20 published solutions, `ceil(LP)` equals the published objective
-   exactly — the LP relaxation of the routing is tight, so the LP value is a
+   exactly. The LP relaxation of the routing is tight, so the LP value is a
    sound search energy and integrality only has to be restored at the end.
 2. A 2-in/2-out digraph is the union of two fixed-point-free permutations that
    disagree everywhere, and the 2-exchange `(a→b),(c→d) ⇒ (a→d),(c→b)`
@@ -48,7 +48,7 @@ export QOBLIB_ROOT=$PWD/QOBLIB
 ## Use
 
 Re-verify every published solution and confirm the LP oracle agrees with all of
-them — run this first, it is the harness everything else rests on:
+them. Run this first, it is the harness everything else rests on:
 
 ```bash
 python scripts/check_reference.py
@@ -83,7 +83,7 @@ python scripts/survey_qoblib.py
 `qoblib_net.solio.verify` is a from-scratch re-implementation of the official
 Rust checker (`08-network/check/src/main.rs`). It reproduces the published
 objective for all 20 instances. It is a development convenience, **not** a
-substitute — run the official Rust checker before submitting anything upstream.
+substitute. Run the official Rust checker before submitting anything upstream.
 
 ## Licence
 

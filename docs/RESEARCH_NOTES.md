@@ -7,7 +7,7 @@ taken from the website copy.
 
 ## 1. What QOBLIB is (and is not)
 
-QOBLIB — the Quantum Optimization Benchmarking Library — is a curated set of ten
+QOBLIB, the Quantum Optimization Benchmarking Library, is a curated set of ten
 NP-hard problem classes maintained by the Zuse Institute Berlin together with
 IBM Quantum, published in *Nature Computational Science* (2026) and on arXiv as
 `2504.03832`. It came out of the Quantum Optimization Working Group started by
@@ -57,21 +57,21 @@ cross-checked against each class's `solutions/README.md`
 | | **total** | **1264** | **533** | **398** | **333** |
 
 "Open" means *no feasible solution is on record at all*. On an open instance,
-the first valid feasible submission becomes the record outright — no need to
+the first valid feasible submission becomes the record outright, with no need to
 beat anybody.
 
 ### Reading the classes
 
-- **02 LABS** — the 34 non-optimal instances are n = 67..100, where the standing
+- **02 LABS**: the 34 non-optimal instances are n = 67..100, where the standing
   values come from the Packebusch–Mertens exhaustive/memetic line of work.
   Those records have held for a decade against dedicated tabu search. Avoid.
-- **10 Topology Design** — this is Graph Golf, which has run as its own public
+- **10 Topology Design**: this is Graph Golf, which has run as its own public
   competition for years; the objective is a small integer diameter, so an
   improvement means dropping it by a whole unit. Avoid.
-- **03 Birkhoff** — 294 best-known entries were swept in a single submission
+- **03 Birkhoff**: 294 best-known entries were swept in a single submission
   (`20260805_BirkhoffPlus_Valls`) days before these notes. Soft class, but the
   bar was just raised across the board and a competitor is clearly active.
-- **06 Portfolio** — four independent submissions (Gurobi, Abs2, Arvak, ISQR)
+- **06 Portfolio**: four independent submissions (Gurobi, Abs2, Arvak, ISQR)
   and *none* improved a reference value, which says the curated references are
   strong. But 28 of 44 bases are open, including both the trivial ones
   (`a003`/`a004`/`a005`, a few dozen binaries) and the large ones
@@ -81,7 +81,7 @@ beat anybody.
   selected precisely *because* existing solvers could not find any feasible
   solution in reasonable time. Steiner's open instances run to millions of
   variables.
-- **08 Network Design** — analysed in detail below.
+- **08 Network Design**: analysed in detail below.
 
 ## 3. Problem 08 in detail
 
@@ -112,8 +112,8 @@ optimality for the last 30 years," and the continuous-flow variant is a MIPLIB
 | network23 | 749,923 | 349,579 | 53.4% | **686,453** |
 | network24 | 779,410 | 224,386 | 71.2% | **663,688** |
 
-Two things follow. First, the lower bounds are hopeless — proving optimality is
-off the table, so this is purely an upper-bound race. Second, **two hours of
+Two things follow. First, the lower bounds are hopeless, so proving
+optimality is off the table and this is purely an upper-bound race. Second, **two hours of
 64-thread Gurobi loses to the curated reference on every open instance**, by up
 to 15%. The references are not solver output; they are the accumulated residue
 of thirty years of specialised work. That is a real bar, but it is a bar set by
@@ -124,7 +124,7 @@ of thirty years of specialised work. That is a real bar, but it is a bar set by
 Measured here, not assumed:
 
 - **The problem factorises.** Choose the topology (combinatorial, brutal);
-  given the topology, the routing is a min-congestion multicommodity flow — a
+  given the topology, the routing is a min-congestion multicommodity flow, which is a
   linear program. So a metaheuristic only ever has to search over digraphs,
   with an exact oracle scoring each one.
 - **The LP relaxation of the routing is tight.** On all 20 published
@@ -132,7 +132,7 @@ Measured here, not assumed:
   `scripts/check_reference.py`). So the LP value is a legitimate search energy,
   and the integral routing only has to be recovered once at the end.
 - **The oracle is fast.** 1.8 ms per evaluation at n = 11, 10 ms at n = 17,
-  34 ms at n = 24 — roughly 550, 100 and 30 evaluations per second on one core.
+  34 ms at n = 24, so roughly 550, 100 and 30 evaluations per second on one core.
 - **The state space has a clean neighbourhood.** A 2-in/2-out digraph is the
   union of two fixed-point-free permutations that disagree everywhere. The
   2-exchange `(a→b),(c→d) ⇒ (a→d),(c→b)` preserves all four degrees, so every
@@ -145,7 +145,7 @@ Measured here, not assumed:
 ### Calibration
 
 Naive single-chain SA from a random start, 2 minutes on one core, network11:
-reaches 256,182 against a best-known of 238,334 — 7.5% short. So the records
+reaches 256,182 against a best-known of 238,334, which is 7.5% short. So the records
 are genuinely non-trivial and a serious method is required. That is the right
 difficulty for a research project: not free, not hopeless.
 
@@ -171,7 +171,7 @@ instances, so they give context but no useful stopping criterion.
 - Leave `Optimality Bound` as `N/A` for heuristic runs. Setting it equal to
   `Best Objective Value` asserts a proven optimum and triggers a hard check.
 - The optional objective time series (`<instance>_objective_time_series.json`)
-  enables time-to-solution analysis. CI enforces monotonicity — a minimisation
+  enables time-to-solution analysis. CI enforces monotonicity, so a minimisation
   run whose incumbent ever increases is a hard failure.
 
 ## 5. Sources
@@ -180,7 +180,7 @@ instances, so they give context but no useful stopping criterion.
 - Repository: https://github.com/ZIB-AOPT/QOBLIB
 - Koch et al., *The Quantum Optimization Benchmarking Library*, Nature
   Computational Science 6, 653–671 (2026), doi:10.1038/s43588-026-00991-1
-- arXiv preprint 2504.03832, *Quantum Optimization Benchmarking Library — The
+- arXiv preprint 2504.03832, *Quantum Optimization Benchmarking Library: The
   Intractable Decathlon*
 - Bienstock & Günlük, *Computational experience with a difficult mixed-integer
   multicommodity flow problem*, Mathematical Programming 68, 213–237 (1995)
