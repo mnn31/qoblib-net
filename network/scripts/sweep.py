@@ -60,7 +60,8 @@ def one_run(job):
     rec = {"instance": f"network{n:02d}", "n": n, "seed": seed,
            "best_lp": res["energy"], "published_bkv": BKV[n],
            "evals": res["evals"], "swaps": res["swaps"],
-           "seconds": res["seconds"], "arcs": res["arcs"]}
+           "seconds": res["seconds"], "arcs": res["arcs"],
+           "trajectory": res["trajectory"]}
     os.makedirs(outdir, exist_ok=True)
     json.dump(rec, open(f"{outdir}/network{n:02d}_seed{seed}.json", "w"), indent=1)
     return rec

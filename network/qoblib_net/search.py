@@ -89,6 +89,10 @@ def parallel_tempering(n, demand, seconds=600.0, replicas=8, seed=0, start=None,
 
     start_time = time.time()
     evals = props = swaps = 0
+    # incumbent trajectory for time-to-solution analysis: (seconds, best-so-far),
+    # recorded whenever the best improves.  The first entry is the starting
+    # incumbent, so the series is non-increasing by construction.
+    trajectory = [{"Time": 0.0, "Incumbent": math.ceil(best_e - 1e-6)}]
 
     while time.time() - start_time < seconds:
         for r in range(replicas):
@@ -105,8 +109,12 @@ def parallel_tempering(n, demand, seconds=600.0, replicas=8, seed=0, start=None,
                 chains[r], energies[r] = cand, e
                 if e < best_e - 1e-6:
                     best, best_e = list(cand), e
+                    now = time.time() - start_time
+                    val = math.ceil(best_e - 1e-6)
+                    if val < trajectory[-1]["Incumbent"]:
+                        trajectory.append({"Time": round(now, 6), "Incumbent": val})
                     if on_improve:
-                        on_improve(best_e, time.time() - start_time)
+                        on_improve(best_e, now)
         if props % swap_every < replicas:
             for r in range(replicas - 1):
                 delta = (1.0 / temps[r] - 1.0 / temps[r + 1]) * (energies[r] - energies[r + 1])
@@ -115,6 +123,12 @@ def parallel_tempering(n, demand, seconds=600.0, replicas=8, seed=0, start=None,
                     energies[r], energies[r + 1] = energies[r + 1], energies[r]
                     swaps += 1
 
+    elapsed = time.time() - start_time
+    # the last entry marks the end of the run, so time-to-solution is the Time of
+    # the first entry whose Incumbent equals the final best
+    if trajectory[-1]["Time"] < elapsed:
+        trajectory.append({"Time": round(elapsed, 6),
+                           "Incumbent": trajectory[-1]["Incumbent"]})
     return {"arcs": best, "energy": best_e, "evals": evals, "swaps": swaps,
-            "seconds": time.time() - start_time, "seed": seed,
-            "temps": temps}
+            "seconds": elapsed, "seed": seed, "temps": temps,
+            "trajectory": trajectory}
