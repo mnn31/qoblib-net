@@ -2,21 +2,22 @@
 
 ## New best-known values, problem 08 (Network Design)
 
-Ten of the fourteen open instances improved over the values published in
+Eleven of the fourteen open instances improved over the values published in
 `08-network/solutions/0-info.txt`. Every solution has been verified by the
 official Rust checker (`08-network/check`, exit code 0) and independently by
 `qoblib_net.solio.verify`.
 
 | instance | published best-known | this work | improvement | relative |
 | :--- | ---: | ---: | ---: | ---: |
+| network13 | 304,116 | **299,715** | 4,401 | 1.45% |
 | network14 | 350,173 | **342,455** | 7,718 | 2.20% |
-| network15 | 383,000 | **372,500** | 10,500 | 2.74% |
+| network15 | 383,000 | **370,967** | 12,033 | 3.14% |
 | network16 | 409,067 | **401,000** | 8,067 | 1.97% |
 | network17 | 460,182 | **434,429** | 25,753 | 5.60% |
-| network18 | 481,950 | **475,656** | 6,294 | 1.31% |
+| network18 | 481,950 | **474,643** | 7,307 | 1.52% |
 | network19 | 514,625 | **497,000** | 17,625 | 3.42% |
 | network20 | 548,536 | **526,653** | 21,883 | 3.99% |
-| network21 | 593,000 | **569,554** | 23,446 | 3.95% |
+| network21 | 593,000 | **570,022** | 22,978 | 3.87% |
 | network22 | 647,594 | **621,810** | 25,784 | 3.98% |
 | network23 | 686,453 | **660,000** | 26,453 | 3.85% |
 
@@ -74,8 +75,8 @@ to 342,455 once six runs were pooled.
 
 ### Not improved
 
-`network11`, `network12` and `network13` were run seven times each and matched
-their published values exactly every time without beating them. Those three look
+`network11` and `network12` were run five times each and matched their
+published values exactly every time without beating them. Those three look
 like strong local optima or true optima, even though only `network05` to
 `network10` are proven.
 

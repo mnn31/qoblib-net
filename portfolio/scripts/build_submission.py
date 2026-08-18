@@ -8,7 +8,7 @@ Layout produced (what misc/ci/check_submission.py expects):
         <instance>/
             <instance>_summary.csv
             <instance>_solution.sol
-            <instance>_objective_time_series.json
+            README.md
 
     PYTHONPATH=. python scripts/build_submission.py --out /tmp/sub06
 """
@@ -75,8 +75,8 @@ rounding, and validated against the shipped a010 reference solutions before any
 of these were produced: it reproduces their published objective values exactly,
 including the ones marked proven optimal.
 
-The method is exact and not anytime, so each objective time series is a single
-incumbent recorded when the dynamic program returns.
+The method is exact and not anytime, so there is no objective time series: the
+dynamic program produces no incumbent before it returns the optimum.
 
 Code: https://github.com/mnn31/qoblib-solvers/tree/main/portfolio
 """
@@ -137,11 +137,10 @@ def main():
         os.makedirs(d, exist_ok=True)
         shutil.copy(f"{rec['_dir']}/{rec['solution']}", f"{d}/{iid}_solution.sol")
 
-        # One deterministic run, and the dynamic program produces no incumbent
-        # before it finishes, so the series is the single point it returns.
-        json.dump([[{"Time": round(rec["seconds"], 6),
-                     "Incumbent": rec["objective"]}]],
-                  open(f"{d}/{iid}_objective_time_series.json", "w"))
+        # No objective time series: the dynamic program is exact and not anytime,
+        # so it produces no incumbent before it finishes.  A one-point series
+        # carries no information the Remarks field does not already state, and
+        # the maintainers asked for it to be left out.
 
         write_csv(f"{d}/{iid}_summary.csv", {
             "Problem": iid,
