@@ -50,6 +50,23 @@ export QOBLIB_ROOT=$PWD/QOBLIB
 PYTHONPATH=. python scripts/portfolio_solve.py --bases a003,a004,a005 --outdir results/small
 ```
 
+## Rounding
+
+The objective is never evaluated in floating point. Prices and covariances are
+parsed into exact rationals, unit prices are rebased exactly as
+`p[i,t] = raw_p[i,t] * unit / raw_p[i,0]`, and every model coefficient is
+rounded once, exactly where the reference model rounds it, with Zimpl's `round`:
+
+```
+round(x) = trunc(x + 1/2)   if x >= 0
+round(x) = trunc(x - 1/2)   if x <  0
+```
+
+That is half away from zero, so `0.5` goes to 1 and `-0.5` goes to -1. IEEE and
+Python's `round` send both to 0, and using them shifts coefficients by a unit.
+After rounding every coefficient is an integer, so the dynamic program runs in
+integer arithmetic with no accumulation error.
+
 ## Validation
 
 Three checks, in order of how much they are worth:
