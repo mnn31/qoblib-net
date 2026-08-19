@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Search for a better topology on one network-design instance.
 
-    python scripts/solve.py 17 --seconds 900 --replicas 8 --start mixed
+    python scripts/solve.py 17 --seconds 900 --replicas 8
 
 Writes a checker-format .sol file into results/ whenever the search ends with a
 topology whose exact integral routing beats the published best-known value.
@@ -38,7 +38,6 @@ def main():
     ap.add_argument("--seconds", type=float, default=600)
     ap.add_argument("--replicas", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--start", choices=["ref", "random", "mixed"], default="mixed")
     ap.add_argument("--qoblib", default=DEFAULT_QOBLIB,
                     help="path to a clone of ZIB-AOPT/QOBLIB")
     ap.add_argument("--outdir", default="results")
@@ -54,15 +53,10 @@ def main():
     print(f"network{a.n:02d}  published best-known {BKV[a.n]}  "
           f"(reference topology LP {ref_energy:.1f})  lower bound {lb['best']:.0f}")
 
-    rng = np.random.default_rng(a.seed)
-    if a.start == "ref":
-        start = ref_arcs
-    elif a.start == "random":
-        start = None
-    else:
-        from qoblib_net.topology import random_topology
-        start = [list(ref_arcs) if r % 2 == 0 else random_topology(a.n, rng)
-                 for r in range(a.replicas)]
+    # The search always starts from random topologies.  The reference solution
+    # is read only to print the target for comparison; seeding a replica with
+    # the published incumbent would make any improvement meaningless.
+    start = None
 
     t0 = time.time()
 
@@ -79,7 +73,7 @@ def main():
     record = {"instance": f"network{a.n:02d}", "best_lp": res["energy"],
               "published_bkv": BKV[a.n], "lower_bound": lb["best"],
               "evals": res["evals"], "seconds": res["seconds"], "seed": a.seed,
-              "start": a.start, "arcs": res["arcs"]}
+              "start": "random", "arcs": res["arcs"]}
     json.dump(record, open(f"{a.outdir}/network{a.n:02d}_seed{a.seed}.json", "w"), indent=1)
 
     # the routing must be integral, so ceil(LP) is what a topology can actually achieve

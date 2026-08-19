@@ -23,7 +23,7 @@ import time
 import numpy as np
 
 from qoblib_net import (BKV, CongestionOracle, parse_demand, parallel_tempering,
-                        read_topology, verify, write_solution)
+                        verify, write_solution)
 from qoblib_net.topology import random_topology
 
 QOBLIB = os.environ.get("QOBLIB_ROOT", os.path.expanduser("~/WORK/QOBLIB/repo"))
@@ -40,21 +40,15 @@ def parse_range(spec: str) -> list[int]:
     return sorted(set(out))
 
 
-def reference_path(n: int) -> str:
-    for suffix in ("opt", "bst"):
-        p = f"{QOBLIB}/08-network/solutions/network{n:02d}.{suffix}.sol"
-        if os.path.exists(p):
-            return p
-    raise FileNotFoundError(n)
-
-
 def one_run(job):
     n, seed, seconds, replicas, outdir = job
     demand = parse_demand(f"{QOBLIB}/08-network/instances/demand.txt", n)
-    ref = read_topology(reference_path(n))
     rng = np.random.default_rng(seed)
-    start = [list(ref) if r % 2 == 0 else random_topology(n, rng)
-             for r in range(replicas)]
+    # Every replica starts from an independently sampled random topology.  The
+    # published reference solutions are never read: seeding a replica with the
+    # incumbent record would let any method reproduce it and would make the
+    # resulting numbers meaningless as a measure of the search.
+    start = [random_topology(n, rng) for _ in range(replicas)]
     res = parallel_tempering(n, demand, seconds=seconds, replicas=replicas,
                              seed=seed, start=start)
     rec = {"instance": f"network{n:02d}", "n": n, "seed": seed,
