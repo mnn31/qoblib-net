@@ -25,11 +25,26 @@ def read_topology(path: str) -> list[tuple[int, int]]:
 
 
 def write_solution(path: str, n: int, arcs, z: float, flow_vec, col_index) -> None:
-    """Emit a Gurobi-format .sol file in the layout the official checker parses."""
+    """Emit a Gurobi-format .sol file in the layout the official checker parses.
+
+    The declared objective is recomputed from the flows rather than taken from
+    the solver's z variable.  The model only constrains z >= every arc load, so
+    a solver may return a z that is not tight; the checker compares the declared
+    value against the largest arc load it computes itself and rejects any
+    mismatch.  Recomputing keeps the two in step and can only lower the reported
+    objective.
+    """
     arcset = set(arcs)
+    load = {}
+    for (k, ai), c in col_index.items():
+        u, v = arcs[ai]
+        val = int(round(flow_vec[c]))
+        if val and k != v:
+            load[(u, v)] = load.get((u, v), 0) + val
+    z_true = max(load.values()) if load else 0
     out = ["# Solution for model obj",
-           f"# Objective value = {int(round(z))}",
-           f"z {int(round(z))}"]
+           f"# Objective value = {z_true}",
+           f"z {z_true}"]
     for i in range(1, n + 1):
         for j in range(n, 0, -1):
             if i == j:
