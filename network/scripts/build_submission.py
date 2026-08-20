@@ -116,6 +116,7 @@ def main():
         json.dump(st["trajectories"],
                   open(f"{d}/{inst}_objective_time_series.json", "w"))
 
+        improves = st.get("improves", True)
         write_csv(f"{d}/{inst}_summary.csv", {
             "Problem": inst,
             "Submitter": SUBMITTER, "Affiliation": AFFILIATION,
@@ -156,7 +157,12 @@ def main():
                 "Heuristic, so the optimality bound is left as N/A. Runtimes are the "
                 "average over the independent runs, single core each, queueing "
                 "excluded. Time to solution is the average over runs of the moment "
-                "each run last improved its incumbent. Successful runs are those "
+                "each run last improved its incumbent. "
+                + ("" if improves else
+                   "This run does not reach the published best-known value and is "
+                   "included so the method stays comparable over time rather than "
+                   "only appearing where it wins. ")
+                + "Successful runs are those "
                 "reaching this method's own best value. The declared objective is "
                 "recomputed from the flows rather than taken from the solver's z "
                 "variable, which the model only bounds from below. Verified with "

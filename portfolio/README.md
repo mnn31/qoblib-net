@@ -67,6 +67,15 @@ Python's `round` send both to 0, and using them shifts coefficients by a unit.
 After rounding every coefficient is an integer, so the dynamic program runs in
 integer arithmetic with no accumulation error.
 
+## Runtimes
+
+Timings come from a single-process run with nothing else on the machine. Running
+eight concurrent workers on an 11-core box inflates them by 2.27x on the `a010`
+families (238.5 min against 105.1 min for the same 64 instances), with identical
+objectives. Two effects are mixed in there: core type accounts for 1.57x
+(75.2 s against 118.2 s for the same solve on performance versus efficiency
+cores), and the rest is memory and cache pressure from eight solves at once.
+
 ## Validation
 
 Three checks, in order of how much they are worth:

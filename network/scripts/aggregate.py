@@ -31,7 +31,11 @@ def main():
     ap.add_argument("--sweep", default="results/sweep")
     ap.add_argument("--outdir", default="results/best")
     ap.add_argument("--stats", default="results/run_stats.json")
+    ap.add_argument("--keep-all", action="store_true",
+                    help="also emit runs that do not beat the published value; "
+                         "QOBLIB wants these on record so methods stay comparable")
     a = ap.parse_args()
+    keep_all = a.keep_all
 
     runs = collections.defaultdict(list)
     for f in sorted(glob.glob(f"{a.sweep}/network*.json")):
@@ -52,7 +56,7 @@ def main():
         delta = best - BKV[n]
         print(f"network{n:02d}{len(rs):>5}{best:>10}{BKV[n]:>11}{delta:>+10}"
               f"{'  improves' if delta < 0 else ''}")
-        if delta >= 0:
+        if delta >= 0 and not keep_all:
             continue
 
         winner = rs[vals.index(best)]
@@ -66,8 +70,12 @@ def main():
         path = f"{a.outdir}/network{n}.sol"
         write_solution(path, n, arcs, z, flows, col)
         ok, obj, msg = verify(path, n, demand)
-        if not ok or obj >= BKV[n]:
+        if not ok:
             print(f"  network{n:02d}: rejected after integralisation ({msg})")
+            os.remove(path)
+            continue
+        if obj >= BKV[n] and not keep_all:
+            print(f"  network{n:02d}: {obj} does not beat {BKV[n]}, not submitted")
             os.remove(path)
             continue
 
@@ -76,6 +84,8 @@ def main():
                else r["trajectory"][-1]["Time"] for r in rs]
         stats[n] = {
             "objective": obj,
+            "improves": bool(obj < BKV[n]),
+            "published": BKV[n],
             "nruns": len(rs),
             "nsucc": sum(1 for v in vals if v <= best),
             "avg_secs": sum(r["seconds"] for r in rs) / len(rs),
@@ -85,7 +95,9 @@ def main():
         }
 
     json.dump(stats, open(a.stats, "w"))
-    print(f"\n{len(stats)} instances improved, statistics written to {a.stats}")
+    improved = sum(1 for v in stats.values() if v["improves"])
+    print(f"\n{len(stats)} instances emitted, {improved} of them improving; "
+          f"statistics written to {a.stats}")
 
 
 if __name__ == "__main__":
